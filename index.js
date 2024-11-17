@@ -128,19 +128,19 @@ async function sendTelegramMessage(message) {
 }
 
 // Set an interval to periodically check and send messages
-async function running() {
-    const params = { domains: 'example.com,another.com,reddit.com', json: 'true' };
-    const response = await handleRequest(params);
-    console.log('Generated Response:', response);
-
-    // Send the plain-text response to Telegram
-    await sendTelegramMessage(response.body);
-}; // 3000 milliseconds = 3 seconds
-// setInterval(async () => {
+// async function running() {
 //     const params = { domains: 'example.com,another.com,reddit.com', json: 'true' };
 //     const response = await handleRequest(params);
 //     console.log('Generated Response:', response);
 
 //     // Send the plain-text response to Telegram
 //     await sendTelegramMessage(response.body);
-// }, 3000); // 3000 milliseconds = 3 seconds
+// }; // 3000 milliseconds = 3 seconds
+setInterval(async () => {
+    const params = { domains: 'example.com,memo777.com', json: 'true' };
+    const response = await handleRequest(params);
+    console.log('Generated Response:', response);
+
+    // Send the plain-text response to Telegram
+    await sendTelegramMessage(response.body);
+}, 300000); // 3000 milliseconds = 3 seconds
