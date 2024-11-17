@@ -114,6 +114,7 @@ async function sendTelegramMessage(message) {
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        timeout: 10000,// Set timeout to 10 seconds or higher
         body: JSON.stringify({
             chat_id: TELEGRAM_CHAT_ID,
             text: message,
