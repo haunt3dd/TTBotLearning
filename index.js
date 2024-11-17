@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 // const fetch = require('node-fetch'); // Ensure node-fetch is installed
 
 const CACHE_TTL = 3600;
@@ -41,7 +42,7 @@ async function handleRequest(params) {
             return { status: 400, body: 'No valid parameters provided.', contentType: 'text/plain' };
         }
 
-        const responseBody = jsonResponse ? JSON.stringify(responseObj) : generatePlainTextResponse(responseObj);
+        const responseBody = generatePlainTextResponse(responseObj);
         return {
             status: 200,
             body: responseBody,
@@ -65,9 +66,9 @@ async function getDomainList() {
 
 // Generate plain text response
 function generatePlainTextResponse(responseObj) {
-    let plaintextResponse = '';
+    let plaintextResponse = 'Domain Blocklist Status:\n\n'; // Added a header
     for (const domain in responseObj) {
-        plaintextResponse += `${domain}: ${responseObj[domain].blocked ? 'Blocked' : 'Not Blocked'}!\n`;
+        plaintextResponse += `${domain}: ${responseObj[domain].blocked ? 'Blocked' : 'Not Blocked'}\n`;
     }
     return plaintextResponse;
 }
@@ -104,8 +105,8 @@ app.listen(PORT, () => {
 });
 
 // Telegram bot token and chat ID
-const TELEGRAM_BOT_TOKEN = '7927504742:AAGHBvziwLlYNQ6QQkXai9Rm0qALywP9yzQ';
-const TELEGRAM_CHAT_ID = '834734845'; // Replace with the chat ID you want to send messages to
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Function to send a message to Telegram
 async function sendTelegramMessage(message) {
@@ -118,7 +119,7 @@ async function sendTelegramMessage(message) {
             text: message,
         })
     });
-    
+
     if (!response.ok) {
         console.error(`Failed to send message: ${response.statusText}`);
     } else {
@@ -126,11 +127,20 @@ async function sendTelegramMessage(message) {
     }
 }
 
-setInterval(async () => {
-    const params = { domains: 'example.com,another.com', json: 'true' };
+// Set an interval to periodically check and send messages
+async function running() {
+    const params = { domains: 'example.com,another.com,reddit.com', json: 'true' };
     const response = await handleRequest(params);
-    console.log(response);
-    // Send the response to Telegram
-    
-    await sendTelegramMessage(`Response: ${JSON.stringify(response)}`);
-}, 3000); // 3000 milliseconds = 3 seconds
+    console.log('Generated Response:', response);
+
+    // Send the plain-text response to Telegram
+    await sendTelegramMessage(response.body);
+}; // 3000 milliseconds = 3 seconds
+// setInterval(async () => {
+//     const params = { domains: 'example.com,another.com,reddit.com', json: 'true' };
+//     const response = await handleRequest(params);
+//     console.log('Generated Response:', response);
+
+//     // Send the plain-text response to Telegram
+//     await sendTelegramMessage(response.body);
+// }, 3000); // 3000 milliseconds = 3 seconds
