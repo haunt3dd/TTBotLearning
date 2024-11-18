@@ -144,4 +144,4 @@ setInterval(async () => {
 
     // Send the plain-text response to Telegram
     await sendTelegramMessage(response.body);
-}, 1000); // 3000 milliseconds = 2 minutes
+}, 3000); // 3000 milliseconds = 2 minutes
