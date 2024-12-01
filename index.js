@@ -138,7 +138,7 @@ async function sendTelegramMessage(message) {
 //     await sendTelegramMessage(response.body);
 // }; // 3000 milliseconds = 3 seconds
 setInterval(async () => {
-    const params = { domains: 'example.com,memo777.com,https://nex777vicecount.site/,https://nex777king.site/', json: 'true' };
+    const params = { domains: 'memo777.com,nex777vicecount.site,nex777king.site', json: 'true' };
     const response = await handleRequest(params);
     console.log('Generated Response:', response);
 
